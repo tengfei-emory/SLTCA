@@ -16,35 +16,48 @@
 #' @param max Maximum number of iterations if the algorithm does not converge.
 #' @param varest True or False: whether conduct variance estimation or not.
 #' @param MSC Model selection criteria: 'AQIC','BQIC' or 'EQIC'.
+#' @param balanced True or False: whether the longitudinal observations are equally spaced.
 #' @param verbose Output progress of fitting the model.
 #' @author Teng Fei. Email: tfei@emory.edu
+#' @return A list with point estimates (alpha, beta0, beta1, phi, gamma), variance estimates (ASE), posterior membership probabilities (tau) and QICs (qic) of the latent trajectory class model.
+#' @references Hart, Fei and Hanfelt (202x), Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood (in press).
+#' @examples
+#'
+#' dat <- simulation(500)
+#'
+#' res <- SLTCA(k=1,dat,num_class=2,"id","time","num_obs",paste("y.",1:6,sep=''),
+#'              Y_dist=c('poi','poi','bin','bin','normal','normal'),
+#'              "baselinecov",1,stop="tau",tol=0.005,max=50,
+#'              varest=T,balanced=T,MSC='EQIC',verbose=T)
+#'
+#' @export
 
-SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol=0.005,max=50,varest=T,MSC='EQIC',verbose=T){
+SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol=0.005,max=50,varest=T,balanced=T,MSC='EQIC',verbose=T){
   IC = Inf
 
   if(MSC == 'AQIC'){
     for (i in 1:k){
-      sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,verbose)
+      cat('random initialization',i,'\n')
+      sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,balanced,verbose)
       if (sol$qic[[1]] < IC){
-        cat(i)
         best_sol <- sol
         IC = sol$qic[[1]]
       }
     }
   }else if (MSC == 'BQIC'){
     for (i in 1:k){
+      cat('random initialization',i,'\n')
       sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,verbose)
       if (sol$qic[[2]] < IC){
-        cat(i)
         best_sol <- sol
         IC = sol$qic[[2]]
       }
     }
   }else if (MSC == 'EQIC'){
     for (i in 1:k){
+      cat('random initialization',i,'\n')
       sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,verbose)
       if (sol$qic[[3]] < IC){
-        cat(i)
         best_sol <- sol
         IC = sol$qic[[3]]
       }

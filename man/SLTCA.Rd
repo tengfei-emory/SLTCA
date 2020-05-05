@@ -5,7 +5,8 @@
 \title{SLTCA: Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood}
 \usage{
 SLTCA(k = 20, dat, num_class, id, time, num_obs, features, Y_dist, covx, ipw,
-  stop, tol = 0.005, max = 50, varest = T, MSC = "EQIC", verbose = T)
+  stop, tol = 0.005, max = 50, varest = T, balanced = T, MSC = "EQIC",
+  verbose = T)
 }
 \arguments{
 \item{k}{Number of random initialization to start the algorithm.}
@@ -36,12 +37,30 @@ SLTCA(k = 20, dat, num_class, id, time, num_obs, features, Y_dist, covx, ipw,
 
 \item{varest}{True or False: whether conduct variance estimation or not.}
 
+\item{balanced}{True or False: whether the longitudinal observations are equally spaced.}
+
 \item{MSC}{Model selection criteria: 'AQIC','BQIC' or 'EQIC'.}
 
 \item{verbose}{Output progress of fitting the model.}
 }
+\value{
+A list with point estimates (alpha, beta0, beta1, phi, gamma), variance estimates (ASE), posterior membership probabilities (tau) and QICs (qic) of the latent trajectory class model.
+}
 \description{
 Conduct latent trajectory class analysis with longitudinal observations.
+}
+\examples{
+
+dat <- simulation(500)
+
+res <- SLTCA(k=1,dat,num_class=2,"id","time","num_obs",paste("y.",1:6,sep=''),
+             Y_dist=c('poi','poi','bin','bin','normal','normal'),
+             "baselinecov",1,stop="tau",tol=0.005,max=50,
+             varest=T,balanced=T,MSC='EQIC',verbose=T)
+
+}
+\references{
+Hart, Fei and Hanfelt (202x), Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood (in press).
 }
 \author{
 Teng Fei. Email: tfei@emory.edu

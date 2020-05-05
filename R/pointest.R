@@ -1,6 +1,6 @@
 # main algorithm to fit the LTCA model
 
-pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol=0.005,max=50,varest,verbose=T){
+pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol=0.005,max=50,varest,balanced=T,verbose=T){
   # let tau0 be a matrix
 
   require(VGAM)
@@ -112,7 +112,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
 
   # obtain approximated likelihood ratios exp(w)
 
-  ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist)
+  ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist,balanced)
 
   # restrict the upper and lower bound of ew
 
@@ -126,7 +126,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
   # note that the data used here is aggregated by pseudo observations
   # with corresponding pseudo classes and posterior weights
 
-  vars <- paste(colnames(baseline[,covx_lb]),collapse="+")
+  vars <- paste(colnames(baseline)[covx_lb],collapse="+")
   regression <- paste0("as.factor(class)", " ~ ", vars)
   obj_alpha_vec <- coef(vglm(as.formula(regression),family = multinomial(refLevel = 1),
                              weight=tau0,
@@ -243,7 +243,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
     # obtain approximated likelihood ratios exp(w)
 
     #ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist)
-    ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist)
+    ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist,balanced)
 
     # restrict the upper and lower bound of ew
 
@@ -257,7 +257,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
     # note that the data used here is aggregated by pseudo observations
     # with corresponding pseudo classes and posterior weights
 
-    vars <- paste(colnames(baseline[,covx_lb]),collapse="+")
+    vars <- paste(colnames(baseline)[covx_lb],collapse="+")
     regression <- paste0("as.factor(class)", " ~ ", vars)
     obj_alpha_vec <- coef(vglm(as.formula(regression),family = multinomial(refLevel = 1),
                                weight=tau0,
@@ -276,7 +276,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
 
     obj_alpha = list()
     for (i in 1:(num_class-1)){
-      obj_alpha[[i]] = obj_alpha_vec[seq(from=i,to=(num_class-2)*(num_covx+1)+i,by=num_covx+1)]
+      obj_alpha[[i]] = obj_alpha_vec[seq(from=i,to=(num_class-1)*num_covx+i,by=num_class-1)]
     }
 
     ###### Obtain posterior membership probability tau0 ######
@@ -375,7 +375,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
   # obtain approximated likelihood ratios exp(w)
 
   #ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist)
-  ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist)
+  ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist,balanced)
 
   # restrict the upper and lower bound of ew
 
@@ -389,7 +389,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
   # note that the data used here is aggregated by pseudo observations
   # with corresponding pseudo classes and posterior weights
 
-  vars <- paste(colnames(baseline[,covx_lb]),collapse="+")
+  vars <- paste(colnames(baseline)[covx_lb],collapse="+")
   regression <- paste0("as.factor(class)", " ~ ", vars)
   obj_alpha_vec <- coef(vglm(as.formula(regression),family = multinomial(refLevel = 1),
                              weight=tau0,
@@ -408,7 +408,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
 
   obj_alpha = list()
   for (i in 1:(num_class-1)){
-    obj_alpha[[i]] = obj_alpha_vec[seq(from=i,to=(num_class-2)*(num_covx+1)+i,by=num_covx+1)]
+    obj_alpha[[i]] =  obj_alpha_vec[seq(from=i,to=(num_class-1)*num_covx+i,by=num_class-1)]
   }
 
   ###### Obtain posterior membership probability tau0 ######
@@ -489,7 +489,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
   # obtain approximated likelihood ratios exp(w)
 
   #ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist)
-  ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist)
+  ew <- LinProj(obj_beta0,obj_beta1,obj_phi,obj_gamma,dat,y,Y_dist,balanced)
 
   # restrict the upper and lower bound of ew
 
@@ -503,7 +503,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
   # note that the data used here is aggregated by pseudo observations
   # with corresponding pseudo classes and posterior weights
 
-  vars <- paste(colnames(baseline[,covx_lb]),collapse="+")
+  vars <- paste(colnames(baseline)[covx_lb],collapse="+")
   regression <- paste0("as.factor(class)", " ~ ", vars)
   obj_alpha_vec <- coef(vglm(as.formula(regression),family = multinomial(refLevel = 1),
                              weight=tau0,
@@ -522,7 +522,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
 
   obj_alpha = list()
   for (i in 1:(num_class-1)){
-    obj_alpha[[i]] = obj_alpha_vec[seq(from=i,to=(num_class-2)*(num_covx+1)+i,by=num_covx+1)]
+    obj_alpha[[i]] =  obj_alpha_vec[seq(from=i,to=(num_class-1)*num_covx+i,by=num_class-1)]
   }
 
   ###### Obtain posterior membership probability tau0 ######
@@ -550,7 +550,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
   if (varest == T){
     cat('Variance estimation started \n')
     x <- as.matrix(baseline[,covx_lb])
-    ASE <- VarEst(obj_beta0,obj_beta1,obj_phi,obj_gamma,tau0,p,dat,x,y,Y_dist,balanced=F)
+    ASE <- VarEst(obj_beta0,obj_beta1,obj_phi,obj_gamma,tau0,p,dat,x,y,Y_dist,balanced)
   }
 
   ######################################################################
@@ -564,7 +564,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
        gamma = obj_gamma,  # AR1 structure parameter
        ASE = ASE,          # variance estimates
        tau = tau0,         # posterior membership prob
-       qic = list(eqica,eqicb,ceeqic),  # information criteria
+       qic = list(EQICA=eqica,EQICB=eqicb,CEEQIC=ceeqic),  # information criteria
        diff=diff,          # convergence criteria
        ew=ew             # exp(w)
   )
