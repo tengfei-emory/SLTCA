@@ -7,7 +7,7 @@ library(devtools)
 install_github('tengfei-emory/SLTCA')
 library(SLTCA)
 ```
-Currently QuantNorm supports R version >= 3.3.0.
+Currently `SLTCA` supports R version >= 3.3.0.
 
 # Example: analyze a simulated dataset
 
