@@ -34,4 +34,4 @@ Please refer to the function documentation for more details.
 
 # References
 
-Hart, Fei and Hanfelt (202x), Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood (in press).
+Hart, Fei and Hanfelt (2020), Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood. Biometrics, accepted.
