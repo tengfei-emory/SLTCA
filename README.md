@@ -13,7 +13,7 @@ Currently `SLTCA` supports R version >= 3.3.0.
 
 ## Data simulation
 
-By default, the function `simulation(n)` generates a dataset with n observations under the scenario 1 described by Hart, Fei and Hanfelt (submitted). 
+By default, the function `simulation(n)` generates a dataset with n observations under the scenario 1 described by Hart, Fei and Hanfelt (2020). 
 ```{r}
 # generate a dataset with 500 individuals
 dat <- simulation(500)
