@@ -42,6 +42,7 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
 
     #print(dmu)
 
+    bigB <- 0
     bigBB <- 0
     bigBalpha <- 0
     bigAalpha <- 0
@@ -66,10 +67,10 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
         Dalpha <- -outer(p[i,-1],p[i,-1])
         diag(Dalpha) <- p[i,-1]*(1-p[i,-1])
         for (j in 2:num_class){
-          qalpha[((j-1)*(ncol(x)+1)-1):((j-1)*(ncol(x)+1))] = qalpha[((j-1)*(ncol(x)+1)-1):((j-1)*(ncol(x)+1))] - p[i,j]*c(1,x[i,])
+          qalpha[((j-1)*(ncol(x)+1)-ncol(x)):((j-1)*(ncol(x)+1))] = qalpha[((j-1)*(ncol(x)+1)-ncol(x)):((j-1)*(ncol(x)+1))] - p[i,j]*c(1,x[i,])
         }
         if (c > 1){
-          qalpha[((c-1)*(ncol(x)+1)-1):((c-1)*(ncol(x)+1))] = qalpha[((c-1)*(ncol(x)+1)-1):((c-1)*(ncol(x)+1))] + c(1,x[i,])
+          qalpha[((c-1)*(ncol(x)+1)-ncol(x)):((c-1)*(ncol(x)+1))] = qalpha[((c-1)*(ncol(x)+1)-ncol(x)):((c-1)*(ncol(x)+1))] + c(1,x[i,])
         }
         bigBa = bigBa + tau[i,c]*qalpha
         bigAalpha = bigAalpha + p[i,c]*kronecker(Dalpha,outer(xi,xi)) - tau[i,c]*qalpha%o%qalpha
@@ -77,14 +78,20 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
       }
       bigBalpha = bigBalpha + outer(bigBa,bigBa)
       bigBB = bigBB + outer(unlist(bigBi),unlist(bigBi))
+      bigB = bigB + outer(c(bigBa,unlist(bigBi)),c(bigBa,unlist(bigBi)))
     }
-    bigAA <- bdiag(bigA) + bigBB
-    Sigma <- solve(bigAA)%*%bigBB%*%solve(bigAA)
-    ASE <- sqrt(diag(Sigma))
 
-    bigAalpha = bigAalpha + bigBalpha
-    Sigmaalpha <- solve(bigAalpha)%*%bigBalpha%*%solve(bigAalpha)
-    ASEalpha <- sqrt(diag(Sigmaalpha))
+    bigAAA <- bdiag(c(list(bigAalpha),bigA)) + bigB
+    Sigma <- solve(bigAAA) %*% bigB %*% solve(bigAAA)
+    ASE0 <- sqrt(diag(Sigma))
+
+    # bigAA <- bdiag(bigA) + bigBB
+    # Sigma <- solve(bigAA)%*%bigBB%*%solve(bigAA)
+    ASE <- ASE0[((ncol(x)+1)*(num_class-1)+1):length(ASE0)]
+
+    # bigAalpha = bigAalpha + bigBalpha
+    # Sigmaalpha <- solve(bigAalpha)%*%bigBalpha%*%solve(bigAalpha)
+    ASEalpha <- ASE0[1:((ncol(x)+1)*(num_class-1))]
 
   }else{
 
@@ -92,6 +99,7 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
     v <- list()
     dmu <- list()
 
+    bigB <- 0
     bigBB <- 0
     bigBalpha <- 0
     bigAalpha <- 0
@@ -184,21 +192,41 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
 
       }
 
+      bigB = bigB + outer(c(bigBa,as.vector(unlist(bigBi))),c(bigBa,as.vector(unlist(bigBi))))
       bigBalpha = bigBalpha + outer(bigBa,bigBa)
       bigBB = bigBB + outer(as.vector(unlist(bigBi)),as.vector(unlist(bigBi)))
     }
-    bigAA <- bdiag(bigA) + bigBB
-    Sigma <- solve(bigAA)%*%bigBB%*%solve(bigAA)
-    ASE <- sqrt(diag(Sigma))
 
-    bigAalpha = bigAalpha + bigBalpha
-    Sigmaalpha <- solve(bigAalpha)%*%bigBalpha%*%solve(bigAalpha)
-    ASEalpha <- sqrt(diag(Sigmaalpha))
+
+    bigAAA <- bdiag(c(list(bigAalpha),bigA)) + bigB
+    Sigma <- solve(bigAAA) %*% bigB %*% solve(bigAAA)
+    ASE0 <- sqrt(diag(Sigma))
+
+    # bigAA <- bdiag(bigA) + bigBB
+    # Sigma <- solve(bigAA)%*%bigBB%*%solve(bigAA)
+    ASE <- ASE0[((ncol(x)+1)*(num_class-1)+1):length(ASE0)]
+
+    # bigAalpha = bigAalpha + bigBalpha
+    # Sigmaalpha <- solve(bigAalpha)%*%bigBalpha%*%solve(bigAalpha)
+    ASEalpha <- ASE0[1:((ncol(x)+1)*(num_class-1))]
+
+    # bigAA <- bdiag(bigA) + bigBB
+    # Sigma <- solve(bigAA)%*%bigBB%*%solve(bigAA)
+    # ASE <- sqrt(diag(Sigma))
+    #
+    # bigAalpha = bigAalpha + bigBalpha
+    # Sigmaalpha <- solve(bigAalpha)%*%bigBalpha%*%solve(bigAalpha)
+    # ASEalpha <- sqrt(diag(Sigmaalpha))
 
   }
 
   ASE_beta0 <- ASE[seq(1,num_feature*2*num_class,2)]
   ASE_beta1 <- ASE[seq(2,num_feature*2*num_class+1,2)]
 
-  list(ASE_beta0,ASE_beta1,ASEalpha)
+  output = list()
+  output$alpha = matrix(ASEalpha,ncol=num_class-1,nrow=(1+ncol(x)))
+  output$beta0 = matrix(ASE_beta0,ncol=num_class,nrow=num_feature)
+  output$beta1 = matrix(ASE_beta1,ncol=num_class,nrow=num_feature)
+
+  return(output)
 }

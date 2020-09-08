@@ -555,6 +555,16 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
 
   ######################################################################
 
+  obj_alpha = matrix(unlist(obj_alpha),ncol=num_class-1,nrow=(1+ncol(x)))
+  rownames(obj_alpha) = c('intercept',covx)
+  rownames(ASE$alpha) = c('intercept',covx)
+  rownames(obj_beta0) = features
+  rownames(obj_beta1) = features
+  rownames(obj_phi) = features
+  rownames(obj_gamma) = features
+  rownames(ASE$beta0) = features
+  rownames(ASE$beta1) = features
+
   ##### output results as a list
 
   list(alpha = obj_alpha,  # parameters for latent class model
@@ -565,8 +575,8 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
        ASE = ASE,          # variance estimates
        tau = tau0,         # posterior membership prob
        qic = list(EQICA=eqica,EQICB=eqicb,CEEQIC=ceeqic),  # information criteria
-       diff=diff,          # convergence criteria
-       ew=ew             # exp(w)
+       diff=diff#,          # convergence criteria
+       #ew=ew             # exp(w)
   )
 
 }
