@@ -20,7 +20,7 @@
 #' @param verbose Output progress of fitting the model.
 #' @author Teng Fei. Email: tfei@emory.edu
 #' @return A list with point estimates (alpha, beta0, beta1, phi, gamma), variance estimates (ASE), posterior membership probabilities (tau) and QICs (qic) of the latent trajectory class model.
-#' @references Hart, Fei and Hanfelt (202x), Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood (in press).
+#' @references Hart, Fei and Hanfelt (2020), Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood. Biometrics
 #' @examples
 #'
 #' dat <- simulation(500)

@@ -63,7 +63,7 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
         bigBi[[c]] <- (tau[i,c] * q)#%o%(tau[i,c] * q)
         bigA[[c]] <- bigA[[c]] + p[i,c]*t(as.matrix(bdiag(dmuc))) %*% as.matrix(solve(bdiag(vc))) %*% as.matrix(bdiag(dmuc)) - tau[i,c]*q%o%q
 
-        Dalpha <- outer(p[i,-1],p[i,-1])
+        Dalpha <- -outer(p[i,-1],p[i,-1])
         diag(Dalpha) <- p[i,-1]*(1-p[i,-1])
         for (j in 2:num_class){
           qalpha[((j-1)*(ncol(x)+1)-1):((j-1)*(ncol(x)+1))] = qalpha[((j-1)*(ncol(x)+1)-1):((j-1)*(ncol(x)+1))] - p[i,j]*c(1,x[i,])
@@ -170,7 +170,7 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
         }
         bigA[[c]] <- bigA[[c]] + p[i,c]*t(as.matrix(bdiag(dmuc))) %*% solve(as.matrix(bdiag(vc))) %*% as.matrix(bdiag(dmuc)) - tau[i,c]*q%o%q
 
-        Dalpha <- outer(p[i,-1],p[i,-1])
+        Dalpha <- -outer(p[i,-1],p[i,-1])
         diag(Dalpha) <- p[i,-1]*(1-p[i,-1])
         for (l in 2:num_class){
           qalpha[((l-1)*(ncol(x)+1)-(ncol(x)+1)+1):((l-1)*(ncol(x)+1))] = qalpha[((l-1)*(ncol(x)+1)-(ncol(x)+1)+1):((l-1)*(ncol(x)+1))] - p[i,l]*c(1,x[i,])
@@ -183,6 +183,7 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
         #cat(sum(diag(bigAalpha)),' ',i,' ',c,'\n')
 
       }
+
       bigBalpha = bigBalpha + outer(bigBa,bigBa)
       bigBB = bigBB + outer(as.vector(unlist(bigBi)),as.vector(unlist(bigBi)))
     }
