@@ -76,7 +76,7 @@ res <- SLTCA(k=1,dat,num_class=2,"id","time","num_obs",paste("y.",1:6,sep=''),
 
 }
 \references{
-Hart, Fei and Hanfelt (2020), Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood. Biometrics, doi:10.1111/biom.13366.
+Hart, K.R., Fei, T. and Hanfelt, J.J. (2020), Scalable and robust latent trajectory class analysis using artificial likelihood. Biometrics. Accepted Author Manuscript. doi:10.1111/biom.13366
 }
 \author{
 Teng Fei. Email: tfei@emory.edu
