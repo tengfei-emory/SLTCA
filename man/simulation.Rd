@@ -18,6 +18,7 @@ Simulate a dataset with longitudinal observations.
 \examples{
 
 dat <- simulation(500)
+
 }
 \author{
 Teng Fei. Email: tfei@emory.edu

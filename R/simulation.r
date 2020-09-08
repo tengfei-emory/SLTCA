@@ -7,10 +7,13 @@
 #' @examples
 #'
 #' dat <- simulation(500)
+#'
+#' @importFrom stats as.formula binomial coef dist fitted gaussian poisson rbinom rmultinom rpois runif weights
 #' @export
 
 
 simulation <- function(n){
+  require(mvtnorm)
   output <- simulate(n)
   return(output)
 }

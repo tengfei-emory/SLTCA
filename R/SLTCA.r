@@ -30,9 +30,15 @@
 #'              "baselinecov",1,stop="tau",tol=0.005,max=50,
 #'              varest=T,balanced=T,MSC='EQIC',verbose=T)
 #'
+#' @importFrom stats as.formula binomial coef dist fitted gaussian poisson rbinom rmultinom rpois runif weights
 #' @export
 
 SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol=0.005,max=50,varest=T,balanced=T,MSC='EQIC',verbose=T){
+
+  require(Matrix)
+  require(VGAM)
+  require(geepack)
+
   IC = Inf
 
   if(MSC == 'AQIC'){
