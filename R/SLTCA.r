@@ -19,8 +19,8 @@
 #' @param balanced True or False: whether the longitudinal observations are equally spaced.
 #' @param verbose Output progress of fitting the model.
 #' @author Teng Fei. Email: tfei@emory.edu
-#' @return A list with point estimates (alpha, beta0, beta1, phi, gamma), variance estimates (ASE), posterior membership probabilities (tau) and QICs (qic) of the latent trajectory class model.
-#' @references Hart, Fei and Hanfelt (2020), Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood. Biometrics
+#' @return A list with point estimates (alpha, beta0, beta1, phi, gamma), variance estimates (ASE), posterior membership probabilities (tau) and QICs (qic) of the latent trajectory class model. Point estimates and variance estimates are provided in matrix format, where columns represent latent classes and rows represent covariates or longitudinal features.
+#' @references Hart, Fei and Hanfelt (2020), Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood. Biometrics, doi:10.1111/biom.13366.
 #' @examples
 #'
 #' dat <- simulation(500)
