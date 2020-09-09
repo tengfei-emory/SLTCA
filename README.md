@@ -3,7 +3,7 @@ SLTCA: Scalable and Robust Latent Trajectory Class Analysis Using Artificial Lik
 
 # News
 
-We are in process to publish the package to CRAN, including a bunch of improvement in reliability and more accurate estimation. This repository will mainly serve as a platform for bug reporting (at [Issues](https://github.com/tengfei-emory/SLTCA/issues)) while we will post the lastest version always on CRAN.
+We are in process to publish the package to CRAN, including a bunch of improvement in reliability and estimation. This repository will mainly serve as a platform for bug reporting (at [Issues](https://github.com/tengfei-emory/SLTCA/issues)) while we will post the lastest version on CRAN.
 
 To access the latest version on GitHub, please go to branch [CRAN](https://github.com/tengfei-emory/SLTCA/tree/CRAN). Thanks for considering using our software!
 
