@@ -68,12 +68,12 @@ Conduct latent trajectory class analysis with longitudinal observations.
 \examples{
 
 
-# In this illustrative example the sample size is set as n=300,
+# In this illustrative example the sample size is set as n=100,
 # variance estimation is skipped by setting varest=FALSE, and
 # the maximum number of iterations is set as max=1 in order to pass CRAN test.
 # Please use n=500, varest=TRUE and max=50 for more reliable results.
 
-dat <- simulation(n=300)
+dat <- simulation(n=100)
 res <- SLTCA(k=1,dat,num_class=2,"id","time","num_obs",paste("y.",1:6,sep=''),
              Y_dist=c('poi','poi','bin','bin','normal','normal'),
              "baselinecov",1,stop="tau",tol=0.005,max=1,
