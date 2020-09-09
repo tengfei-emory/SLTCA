@@ -8,7 +8,7 @@ Version: 0.1.0
 Authors@R: c(
     person("Kari", "Hart", email = "khart@peddie.org", role = "aut"),
     person("Teng", "Fei", email = "tfei@emory.edu", role = c("cre","aut"), comment = c(ORCID = "0000-0001-7888-1715")),
-    person("John", "Hanfelt", email = "jhanfel@emory.edu", role = "aut")
+    person("John", "Hanfelt", email = "jhanfel@emory.edu", role = "aut", comment = c(ORCID = "0000-0002-8488-6771"))
     )
 Maintainer: Teng Fei <tfei@emory.edu>
 BugReports: https://github.com/tengfei-emory/SLTCA/issues
