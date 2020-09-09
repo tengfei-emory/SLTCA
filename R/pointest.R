@@ -2,9 +2,10 @@
 
 pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol=0.005,max=50,varest,balanced=T,verbose=T){
   # let tau0 be a matrix
-
-  require(VGAM)
-  require(geepack)
+  #require(VGAM)
+  #require(geepack)
+  requireNamespace("VGAM")
+  requireNamespace("geepack")
 
   n=length(unique(dat[,id]))
 
@@ -57,11 +58,11 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
   eqic = 0
 
   for (c in 1:num_class){
-    dat$tau = 0
+    tau = rep(0,nrow(dat))
 
     # assign posterior membership probability w.r.t class c to the data
     for (i in 1:n){
-      dat$tau[dat$id==i] = tau0[i,c]
+      tau[dat$id==i] = tau0[i,c]
     }
 
     for (j in 1:num_feature){
@@ -69,14 +70,15 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
       # yy is the jth longitudinal marker
       yy <- as.numeric(dat[,paste('y.',j,sep='')])
       nalabel <- is.na(yy)
+      tau <- tau[!nalabel]
 
       # fit corresponding GEE model with weights tau and AR1 correlation structure
       if(Y_dist[j] == 'normal'){
-        geefit <- geeglm(yy[!nalabel]~time,family=gaussian,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+        geefit <- geepack::geeglm(yy[!nalabel]~time,family=gaussian,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
       }else if (Y_dist[j] == 'poi'){
-        geefit <- geeglm(yy[!nalabel]~time,family=poisson,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+        geefit <- geepack::geeglm(yy[!nalabel]~time,family=poisson,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
       }else if (Y_dist[j] == 'bin'){
-        geefit <- geeglm(((yy[!nalabel]))~time,family=binomial,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+        geefit <- geepack::geeglm(((yy[!nalabel]))~time,family=binomial,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
       }
 
       # obtain point estimates
@@ -128,7 +130,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
 
   vars <- paste(colnames(baseline)[covx_lb],collapse="+")
   regression <- paste0("as.factor(class)", " ~ ", vars)
-  obj_alpha_vec <- coef(vglm(as.formula(regression),family = multinomial(refLevel = 1),
+  obj_alpha_vec <- coef(VGAM::vglm(as.formula(regression),family = VGAM::multinomial(refLevel = 1),
                              weight=tau0,
                              data=data.frame(do.call("rbind", rep(list(baseline), num_class)),
                                              class = lab_class, tau0 = as.vector(tau0)
@@ -187,11 +189,11 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
     eqic = 0
 
     for (c in 1:num_class){
-      dat$tau = 0
+      tau = rep(0,nrow(dat))
 
       # assign posterior membership probability w.r.t class c to the data
       for (i in 1:n){
-        dat$tau[dat$id==i] = tau0[i,c]
+        tau[dat$id==i] = tau0[i,c]
       }
 
       for (j in 1:num_feature){
@@ -199,14 +201,15 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
         # yy is the jth longitudinal marker
         yy <- as.numeric(dat[,paste('y.',j,sep='')])
         nalabel <- is.na(yy)
+        tau <- tau[!nalabel]
 
         # fit corresponding GEE model with weights tau and AR1 correlation structure
         if(Y_dist[j] == 'normal'){
-          geefit <- geeglm(yy[!nalabel]~time,family=gaussian,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+          geefit <- geepack::geeglm(yy[!nalabel]~time,family=gaussian,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
         }else if (Y_dist[j] == 'poi'){
-          geefit <- geeglm(yy[!nalabel]~time,family=poisson,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+          geefit <- geepack::geeglm(yy[!nalabel]~time,family=poisson,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
         }else if (Y_dist[j] == 'bin'){
-          geefit <- geeglm(((yy[!nalabel]))~time,family=binomial,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+          geefit <- geepack::geeglm(((yy[!nalabel]))~time,family=binomial,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
         }
 
         # obtain point estimates
@@ -259,7 +262,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
 
     vars <- paste(colnames(baseline)[covx_lb],collapse="+")
     regression <- paste0("as.factor(class)", " ~ ", vars)
-    obj_alpha_vec <- coef(vglm(as.formula(regression),family = multinomial(refLevel = 1),
+    obj_alpha_vec <- coef(VGAM::vglm(as.formula(regression),family = VGAM::multinomial(refLevel = 1),
                                weight=tau0,
                                data=data.frame(do.call("rbind", rep(list(baseline), num_class)),
                                                class = lab_class, tau0 = as.vector(tau0)
@@ -324,11 +327,11 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
   eqic = 0
 
   for (c in 1:num_class){
-    dat$tau = 0
+    tau = rep(0,nrow(dat))
 
     # assign posterior membership probability w.r.t class c to the data
     for (i in 1:n){
-      dat$tau[dat$id==i] = tau0[i,c]
+      tau[dat$id==i] = tau0[i,c]
     }
 
     for (j in 1:num_feature){
@@ -336,14 +339,15 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
       # yy is the jth longitudinal marker
       yy <- as.numeric(dat[,paste('y.',j,sep='')])
       nalabel <- is.na(yy)
+      tau <- tau[!nalabel]
 
       # fit corresponding GEE model with weights tau and AR1 correlation structure
       if(Y_dist[j] == 'normal'){
-        geefit <- geeglm(yy[!nalabel]~time,family=gaussian,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+        geefit <- geepack::geeglm(yy[!nalabel]~time,family=gaussian,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
       }else if (Y_dist[j] == 'poi'){
-        geefit <- geeglm(yy[!nalabel]~time,family=poisson,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+        geefit <- geepack::geeglm(yy[!nalabel]~time,family=poisson,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
       }else if (Y_dist[j] == 'bin'){
-        geefit <- geeglm(((yy[!nalabel]))~time,family=binomial,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+        geefit <- geepack::geeglm(((yy[!nalabel]))~time,family=binomial,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
       }
 
       # obtain point estimates
@@ -391,7 +395,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
 
   vars <- paste(colnames(baseline)[covx_lb],collapse="+")
   regression <- paste0("as.factor(class)", " ~ ", vars)
-  obj_alpha_vec <- coef(vglm(as.formula(regression),family = multinomial(refLevel = 1),
+  obj_alpha_vec <- coef(VGAM::vglm(as.formula(regression),family = VGAM::multinomial(refLevel = 1),
                              weight=tau0,
                              data=data.frame(do.call("rbind", rep(list(baseline), num_class)),
                                              class = lab_class, tau0 = as.vector(tau0)
@@ -438,11 +442,11 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
   eqic = 0
 
   for (c in 1:num_class){
-    dat$tau = 0
+    tau = rep(0,nrow(dat))
 
     # assign posterior membership probability w.r.t class c to the data
     for (i in 1:n){
-      dat$tau[dat$id==i] = tau0[i,c]
+      tau[dat$id==i] = tau0[i,c]
     }
 
     for (j in 1:num_feature){
@@ -450,14 +454,15 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
       # yy is the jth longitudinal marker
       yy <- as.numeric(dat[,paste('y.',j,sep='')])
       nalabel <- is.na(yy)
+      tau <- tau[!nalabel]
 
       # fit corresponding GEE model with weights tau and AR1 correlation structure
       if(Y_dist[j] == 'normal'){
-        geefit <- geeglm(yy[!nalabel]~time,family=gaussian,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+        geefit <- geepack::geeglm(yy[!nalabel]~time,family=gaussian,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
       }else if (Y_dist[j] == 'poi'){
-        geefit <- geeglm(yy[!nalabel]~time,family=poisson,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+        geefit <- geepack::geeglm(yy[!nalabel]~time,family=poisson,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
       }else if (Y_dist[j] == 'bin'){
-        geefit <- geeglm(((yy[!nalabel]))~time,family=binomial,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
+        geefit <- geepack::geeglm(((yy[!nalabel]))~time,family=binomial,id=id,waves=num_obs,data=dat[!nalabel,],weight=tau*ipw,corstr='ar1')#,scale.fix=T,scale.value = 1)
       }
 
       # obtain point estimates
@@ -505,7 +510,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
 
   vars <- paste(colnames(baseline)[covx_lb],collapse="+")
   regression <- paste0("as.factor(class)", " ~ ", vars)
-  obj_alpha_vec <- coef(vglm(as.formula(regression),family = multinomial(refLevel = 1),
+  obj_alpha_vec <- coef(VGAM::vglm(as.formula(regression),family = VGAM::multinomial(refLevel = 1),
                              weight=tau0,
                              data=data.frame(do.call("rbind", rep(list(baseline), num_class)),
                                              class = lab_class, tau0 = as.vector(tau0)

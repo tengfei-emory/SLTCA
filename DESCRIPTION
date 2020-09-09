@@ -3,9 +3,13 @@ Type: Package
 Title: SLTCA: Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood
 Description: Conduct latent trajectory class analysis with longitudinal observations.
 Depends: R (>= 3.3.0)
-Imports: stats, geepack, VGAM, Matrix
+Imports: stats, geepack, VGAM, Matrix, mvtnorm
 Version: 0.1.0
-Author: Kari Hart, Teng Fei and John Hanfelt
+Authors@R: c(
+    person("Kari", "Hart", email = "khart@peddie.org", role = "aut"),
+    person("Teng", "Fei", email = "tfei@emory.edu", role = "cre","aut", comment = c(ORCID = "0000-0001-7888-1715")),
+    person("John", "Hanfelt", email = "jhanfel@emory.edu", role = "aut")
+    )
 Maintainer: Teng Fei <tfei@emory.edu>
 BugReports: https://github.com/tengfei-emory/SLTCA/issues
 License: GPL (>= 2)

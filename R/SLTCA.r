@@ -18,9 +18,9 @@
 #' @param MSC Model selection criteria: 'AQIC','BQIC' or 'EQIC'.
 #' @param balanced True or False: whether the longitudinal observations are equally spaced.
 #' @param verbose Output progress of fitting the model.
-#' @author Teng Fei. Email: tfei@emory.edu
+#' @author Teng Fei. Email: <tfei@emory.edu>
 #' @return A list with point estimates (alpha, beta0, beta1, phi, gamma), variance estimates (ASE), posterior membership probabilities (tau) and QICs (qic) of the latent trajectory class model. Point estimates and variance estimates are provided in matrix format, where columns represent latent classes and rows represent covariates or longitudinal features.
-#' @references Hart, K.R., Fei, T. and Hanfelt, J.J. (2020), Scalable and robust latent trajectory class analysis using artificial likelihood. Biometrics. Accepted Author Manuscript. doi:10.1111/biom.13366
+#' @references Hart, K.R., Fei, T. and Hanfelt, J.J. (2020), Scalable and robust latent trajectory class analysis using artificial likelihood. Biometrics. Accepted Author Manuscript <doi:10.1111/biom.13366>.
 #' @examples
 #'
 #' dat <- simulation(500)
@@ -28,16 +28,19 @@
 #' res <- SLTCA(k=1,dat,num_class=2,"id","time","num_obs",paste("y.",1:6,sep=''),
 #'              Y_dist=c('poi','poi','bin','bin','normal','normal'),
 #'              "baselinecov",1,stop="tau",tol=0.005,max=50,
-#'              varest=T,balanced=T,MSC='EQIC',verbose=T)
+#'              varest=TRUE,balanced=TRUE,MSC='EQIC',verbose=TRUE)
 #'
 #' @importFrom stats as.formula binomial coef dist fitted gaussian poisson rbinom rmultinom rpois runif weights
 #' @export
 
 SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol=0.005,max=50,varest=T,balanced=T,MSC='EQIC',verbose=T){
 
-  require(Matrix)
-  require(VGAM)
-  require(geepack)
+  #require(Matrix)
+  #require(VGAM)
+  #require(geepack)
+  requireNamespace("Matrix")
+  requireNamespace("VGAM")
+  requireNamespace("geepack")
 
   IC = Inf
 
@@ -70,7 +73,6 @@ SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,
     }
   }else{
     print('Error: MSC undefined.')
-    break
   }
 
   return(best_sol)

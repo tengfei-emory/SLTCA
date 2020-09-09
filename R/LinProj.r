@@ -1,8 +1,8 @@
 LinProj <- function(beta0,beta1,phi,gamma,dat,y,Y_dist,balanced=F){
 
   # compute the approximated likelihood exp(w)
-
-  require(Matrix)
+  #require(Matrix)
+  requireNamespace("Matrix")
   num_class = ncol(phi)
   num_feature = nrow(phi)
 
@@ -69,7 +69,7 @@ LinProj <- function(beta0,beta1,phi,gamma,dat,y,Y_dist,balanced=F){
 
           # compute w
 
-          LP[i,j] = as.numeric(0.5*(unlist(muj)-unlist(mu1))%*%(solve(bdiag(vj))%*%(as.vector(y[dat$id==ii,])-unlist(muj)) + solve(bdiag(v1))%*%(as.vector(y[dat$id==ii,])-unlist(mu1))))
+          LP[i,j] = as.numeric(0.5*(unlist(muj)-unlist(mu1))%*%(solve(Matrix::bdiag(vj))%*%(as.vector(y[dat$id==ii,])-unlist(muj)) + solve(Matrix::bdiag(v1))%*%(as.vector(y[dat$id==ii,])-unlist(mu1))))
         }
       }
     }

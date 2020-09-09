@@ -1,5 +1,6 @@
-VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
-  require(Matrix)
+VarEst <- function(beta0,beta1,phi,gamma,tau1,p,dat,x,y,Y_dist,balanced=T){
+  #require(Matrix)
+  requireNamespace("Matrix")
   num_class = ncol(phi)
   num_feature = nrow(phi)
 
@@ -60,9 +61,9 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
         muc <- as.vector(matrix(unlist(mu[[c]]),ncol=num_feature)[1:ilen,])
         vc <- lapply(v[[c]],function(x) x[1:ilen,1:ilen])
         dmuc <- lapply(dmu[[c]],function(x) x[1:ilen,])
-        q <- as.vector(t(as.matrix(bdiag(dmuc))) %*% solve(as.matrix(bdiag(vc))) %*% (as.vector(y[dat$id==ii,])-unlist(muc)))
-        bigBi[[c]] <- (tau[i,c] * q)#%o%(tau[i,c] * q)
-        bigA[[c]] <- bigA[[c]] + p[i,c]*t(as.matrix(bdiag(dmuc))) %*% as.matrix(solve(bdiag(vc))) %*% as.matrix(bdiag(dmuc)) - tau[i,c]*q%o%q
+        q <- as.vector(t(as.matrix(Matrix::bdiag(dmuc))) %*% solve(as.matrix(Matrix::bdiag(vc))) %*% (as.vector(y[dat$id==ii,])-unlist(muc)))
+        bigBi[[c]] <- (tau1[i,c] * q)#%o%(tau1[i,c] * q)
+        bigA[[c]] <- bigA[[c]] + p[i,c]*t(as.matrix(Matrix::bdiag(dmuc))) %*% as.matrix(solve(Matrix::bdiag(vc))) %*% as.matrix(Matrix::bdiag(dmuc)) - tau1[i,c]*q%o%q
 
         Dalpha <- -outer(p[i,-1],p[i,-1])
         diag(Dalpha) <- p[i,-1]*(1-p[i,-1])
@@ -72,8 +73,8 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
         if (c > 1){
           qalpha[((c-1)*(ncol(x)+1)-ncol(x)):((c-1)*(ncol(x)+1))] = qalpha[((c-1)*(ncol(x)+1)-ncol(x)):((c-1)*(ncol(x)+1))] + c(1,x[i,])
         }
-        bigBa = bigBa + tau[i,c]*qalpha
-        bigAalpha = bigAalpha + p[i,c]*kronecker(Dalpha,outer(xi,xi)) - tau[i,c]*qalpha%o%qalpha
+        bigBa = bigBa + tau1[i,c]*qalpha
+        bigAalpha = bigAalpha + p[i,c]*kronecker(Dalpha,outer(xi,xi)) - tau1[i,c]*qalpha%o%qalpha
 
       }
       bigBalpha = bigBalpha + outer(bigBa,bigBa)
@@ -81,7 +82,7 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
       bigB = bigB + outer(c(bigBa,unlist(bigBi)),c(bigBa,unlist(bigBi)))
     }
 
-    bigAAA <- bdiag(c(list(bigAalpha),bigA)) + bigB
+    bigAAA <- Matrix::bdiag(c(list(bigAalpha),bigA)) + bigB
     Sigma <- solve(bigAAA) %*% bigB %*% solve(bigAAA)
     ASE0 <- sqrt(diag(Sigma))
 
@@ -164,19 +165,19 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
         dmuc <- dmu[[c]]
 
         if (length(unique(dat$time[dat$id == ii])) < length(dat$time[dat$id == ii])){
-          q <- as.vector(t(as.matrix(bdiag(dmuc))) %*% as.matrix(solve(bdiag(vc))) %*% (as.vector(y[min(which(dat$id==ii)),][!nalabel[1,]])-muc))
+          q <- as.vector(t(as.matrix(Matrix::bdiag(dmuc))) %*% as.matrix(solve(Matrix::bdiag(vc))) %*% (as.vector(y[min(which(dat$id==ii)),][!nalabel[1,]])-muc))
         }else{
-          q <- as.vector(t(as.matrix(bdiag(dmuc))) %*% as.matrix(solve(bdiag(vc))) %*% (as.vector(y[dat$id==ii,][!nalabel])-muc))
+          q <- as.vector(t(as.matrix(Matrix::bdiag(dmuc))) %*% as.matrix(solve(Matrix::bdiag(vc))) %*% (as.vector(y[dat$id==ii,][!nalabel])-muc))
         }
 
         if (is.null(nalabel2)){
-          bigBi[[c]] <- (tau[i,c] * q)#%o%(tau[i,c] * q)
+          bigBi[[c]] <- (tau1[i,c] * q)#%o%(tau1[i,c] * q)
         }else{
           bigBi[[c]] <- rep(0,2*num_feature)
-          bigBi[[c]][-c(nalabel2,num_feature+nalabel2)] = (tau[i,c] * q)
+          bigBi[[c]][-c(nalabel2,num_feature+nalabel2)] = (tau1[i,c] * q)
           bigBi[[c]] <- as.matrix(bigBi[[c]])
         }
-        bigA[[c]] <- bigA[[c]] + p[i,c]*t(as.matrix(bdiag(dmuc))) %*% solve(as.matrix(bdiag(vc))) %*% as.matrix(bdiag(dmuc)) - tau[i,c]*q%o%q
+        bigA[[c]] <- bigA[[c]] + p[i,c]*t(as.matrix(Matrix::bdiag(dmuc))) %*% solve(as.matrix(Matrix::bdiag(vc))) %*% as.matrix(Matrix::bdiag(dmuc)) - tau1[i,c]*q%o%q
 
         Dalpha <- -outer(p[i,-1],p[i,-1])
         diag(Dalpha) <- p[i,-1]*(1-p[i,-1])
@@ -186,8 +187,8 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
         if (c > 1){
           qalpha[((c-1)*(ncol(x)+1)-(ncol(x)+1)+1):((c-1)*(ncol(x)+1))] = qalpha[((c-1)*(ncol(x)+1)-(ncol(x)+1)+1):((c-1)*(ncol(x)+1))] + c(1,x[i,])
         }
-        bigBa = bigBa + tau[i,c]*qalpha
-        bigAalpha = bigAalpha + p[i,c]*kronecker(Dalpha,outer(xi,xi)) - tau[i,c]*qalpha%o%qalpha
+        bigBa = bigBa + tau1[i,c]*qalpha
+        bigAalpha = bigAalpha + p[i,c]*kronecker(Dalpha,outer(xi,xi)) - tau1[i,c]*qalpha%o%qalpha
         #cat(sum(diag(bigAalpha)),' ',i,' ',c,'\n')
 
       }
@@ -198,7 +199,7 @@ VarEst <- function(beta0,beta1,phi,gamma,tau,p,dat,x,y,Y_dist,balanced=T){
     }
 
 
-    bigAAA <- bdiag(c(list(bigAalpha),bigA)) + bigB
+    bigAAA <- Matrix::bdiag(c(list(bigAalpha),bigA)) + bigB
     Sigma <- solve(bigAAA) %*% bigB %*% solve(bigAAA)
     ASE0 <- sqrt(diag(Sigma))
 

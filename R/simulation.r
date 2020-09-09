@@ -13,7 +13,8 @@
 
 
 simulation <- function(n){
-  require(mvtnorm)
+  #require(mvtnorm)
+  requireNamespace("mvtnorm")
   output <- simulate(n)
   return(output)
 }

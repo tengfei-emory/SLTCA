@@ -1,5 +1,7 @@
 ic <- function(geefit,Y_dist,yy){
 
+  #require(geepack)
+  requireNamespace("geepack")
   #weights(geefit) gives posterior membership probabilities tau
   #geefit$geese$gamma is the estimated scale parameter
 

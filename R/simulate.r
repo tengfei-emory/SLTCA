@@ -26,12 +26,13 @@ simulate <- function(n=500,time_base=c(0,0.5,1,1.5,2,2.5),
                      gamma=matrix(rep(0.3,12),ncol=2)
                      ){
 
-  require(mvtnorm)
+  #require(mvtnorm)
+  requireNamespace("mvtnorm")
 
   num_class = length(alpha0) + 1
   # Generate latent class
   if (X_dist == 'binom'){
-    Xcov = rbinom(n,size=1,p=0.5)
+    Xcov = rbinom(n,size=1,prob=0.5)
   }
   p <- matrix(0,ncol=num_class,nrow=n)
   p[,1] = 1
@@ -95,7 +96,7 @@ simulate <- function(n=500,time_base=c(0,0.5,1,1.5,2,2.5),
         v <- phi[j,z[i]]*diag(1,length(mu)) %*% (gamma[j,z[i]]^as.matrix(dist(num_obs[id==i]))) %*% diag(1,length(mu))
 
         # simulate by rmvnorm
-        y[id==i,j] = rmvnorm(1,mean=mu,sigma=v)
+        y[id==i,j] = mvtnorm::rmvnorm(1,mean=mu,sigma=v)
       }else if(Y_dist[j] == 'poi'){
 
         # obtain the correlation matrix v with AR1 structure
