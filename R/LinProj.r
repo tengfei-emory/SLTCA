@@ -57,7 +57,7 @@ LinProj <- function(beta0,beta1,phi,gamma,dat,y,Y_dist,balanced=F){
         }else{
 
           # ilen is the label of observations for the jth feature for observation ii.
-          ilen <- nrow(dat[dat$id==ii,]) - is.na(y[dat$id==ii])
+          ilen <- nrow(dat[dat$id==ii,]) - sum(is.na(y[dat$id==ii]))
 
           # When the observation times are equally spaced, can directly subset
           # already craeted mean vector and covariance matrix from time 0 to max
