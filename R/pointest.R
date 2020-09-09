@@ -556,32 +556,47 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
     cat('Variance estimation started \n')
     x <- as.matrix(baseline[,covx_lb])
     ASE <- VarEst(obj_beta0,obj_beta1,obj_phi,obj_gamma,tau0,p,dat,x,y,Y_dist,balanced)
+    rownames(ASE$alpha) = c('intercept',covx)
+    rownames(ASE$beta0) = features
+    rownames(ASE$beta1) = features
   }
 
   ######################################################################
 
-  obj_alpha = matrix(unlist(obj_alpha),ncol=num_class-1,nrow=(1+ncol(x)))
+  obj_alpha = matrix(unlist(obj_alpha),ncol=num_class-1,nrow=(1+ncol(as.matrix(baseline[,covx_lb]))))
   rownames(obj_alpha) = c('intercept',covx)
-  rownames(ASE$alpha) = c('intercept',covx)
   rownames(obj_beta0) = features
   rownames(obj_beta1) = features
   rownames(obj_phi) = features
   rownames(obj_gamma) = features
-  rownames(ASE$beta0) = features
-  rownames(ASE$beta1) = features
+
 
   ##### output results as a list
 
-  list(alpha = obj_alpha,  # parameters for latent class model
-       beta0 = obj_beta0,  # intercepts for GEE model (features as rows, class as columns)
-       beta1 = obj_beta1,  # slope for GEE model
-       phi = obj_phi,      # scale parameter
-       gamma = obj_gamma,  # AR1 structure parameter
-       ASE = ASE,          # variance estimates
-       tau = tau0,         # posterior membership prob
-       qic = list(EQICA=eqica,EQICB=eqicb,CEEQIC=ceeqic),  # information criteria
-       diff=diff#,          # convergence criteria
-       #ew=ew             # exp(w)
-  )
+  output = list()
+  output$alpha = obj_alpha
+  output$beta0 = obj_beta0
+  output$beta1 = obj_beta1
+  output$phi = obj_phi
+  output$gamma = obj_gamma
+  if(varest == T){
+    output$ASE = ASE
+  }
+  output$tau = tau0
+  output$qic = list(EQICA=eqica,EQICB=eqicb,CEEQIC=ceeqic)
+  output$diff = diff
 
+  # list(alpha = obj_alpha,  # parameters for latent class model
+  #      beta0 = obj_beta0,  # intercepts for GEE model (features as rows, class as columns)
+  #      beta1 = obj_beta1,  # slope for GEE model
+  #      phi = obj_phi,      # scale parameter
+  #      gamma = obj_gamma,  # AR1 structure parameter
+  #      ASE = ASE,          # variance estimates
+  #      tau = tau0,         # posterior membership prob
+  #      qic = list(EQICA=eqica,EQICB=eqicb,CEEQIC=ceeqic),  # information criteria
+  #      diff=diff#,          # convergence criteria
+  #      #ew=ew             # exp(w)
+  # )
+
+  return(output)
 }

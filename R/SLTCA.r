@@ -19,15 +19,17 @@
 #' @param balanced True or False: whether the longitudinal observations are equally spaced.
 #' @param verbose Output progress of fitting the model.
 #' @author Teng Fei. Email: <tfei@emory.edu>
-#' @return A list with point estimates (alpha, beta0, beta1, phi, gamma), variance estimates (ASE), posterior membership probabilities (tau) and QICs (qic) of the latent trajectory class model. Point estimates and variance estimates are provided in matrix format, where columns represent latent classes and rows represent covariates or longitudinal features.
+#' @return A list with point estimates (alpha, beta0, beta1, phi, gamma), variance estimates (ASE), posterior membership probabilities (tau), QICs (qic) of the latent trajectory class model, and stopping criteria (diff) at the last iteration. Point estimates and variance estimates are provided in matrix format, where columns represent latent classes and rows represent covariates or longitudinal features.
 #' @references Hart, K.R., Fei, T. and Hanfelt, J.J. (2020), Scalable and robust latent trajectory class analysis using artificial likelihood. Biometrics. Accepted Author Manuscript <doi:10.1111/biom.13366>.
 #' @examples
 #'
-#' dat <- simulation(500)
 #'
-#' # In this illustrative example variance estimation is skipped by setting varest=FALSE and
+#' # In this illustrative example the sample size is set as n=300,
+#' # variance estimation is skipped by setting varest=FALSE, and
 #' # the maximum number of iterations is set as max=1 in order to pass CRAN test.
-#' # Please use varest=TRUE and max=50 for more reliable results.
+#' # Please use n=500, varest=TRUE and max=50 for more reliable results.
+#'
+#' dat <- simulation(n=300)
 #' res <- SLTCA(k=1,dat,num_class=2,"id","time","num_obs",paste("y.",1:6,sep=''),
 #'              Y_dist=c('poi','poi','bin','bin','normal','normal'),
 #'              "baselinecov",1,stop="tau",tol=0.005,max=1,
