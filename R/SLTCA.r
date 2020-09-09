@@ -25,10 +25,13 @@
 #'
 #' dat <- simulation(500)
 #'
+#' # In this illustrative example variance estimation is skipped by setting varest=FALSE and
+#' # the maximum number of iterations is set as max=1 in order to pass CRAN test.
+#' # Please use varest=TRUE and max=50 for more reliable results.
 #' res <- SLTCA(k=1,dat,num_class=2,"id","time","num_obs",paste("y.",1:6,sep=''),
 #'              Y_dist=c('poi','poi','bin','bin','normal','normal'),
-#'              "baselinecov",1,stop="tau",tol=0.005,max=50,
-#'              varest=TRUE,balanced=TRUE,MSC='EQIC',verbose=TRUE)
+#'              "baselinecov",1,stop="tau",tol=0.005,max=1,
+#'              varest=FALSE,balanced=TRUE,MSC='EQIC',verbose=TRUE)
 #'
 #' @importFrom stats as.formula binomial coef dist fitted gaussian poisson rbinom rmultinom rpois runif weights
 #' @export
