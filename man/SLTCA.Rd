@@ -2,7 +2,7 @@
 % Please edit documentation in R/SLTCA.r
 \name{SLTCA}
 \alias{SLTCA}
-\title{SLTCA: Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood}
+\title{Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood}
 \usage{
 SLTCA(
   k = 20,

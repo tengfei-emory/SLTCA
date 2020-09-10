@@ -20,6 +20,9 @@ Simulate a dataset with longitudinal observations.
 dat <- simulation(500)
 
 }
+\references{
+Hart, K.R., Fei, T. and Hanfelt, J.J. (2020), Scalable and robust latent trajectory class analysis using artificial likelihood. Biometrics. Accepted Author Manuscript <doi:10.1111/biom.13366>.
+}
 \author{
 Teng Fei. Email: tfei@emory.edu
 }
