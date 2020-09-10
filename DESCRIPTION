@@ -1,7 +1,7 @@
 Package: SLTCA
 Type: Package
-Title: SLTCA: Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood
-Description: Conduct latent trajectory class analysis with longitudinal observations.
+Title: Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood
+Description: Conduct latent trajectory class analysis with longitudinal data. Our method supports longitudinal continuous, binary and count data. For more methodological details, please refer to Hart, K.R., Fei, T. and Hanfelt, J.J. (2020), Scalable and robust latent trajectory class analysis using artificial likelihood. Biometrics <doi:10.1111/biom.13366>.
 Depends: R (>= 3.3.0)
 Imports: stats, geepack, VGAM, Matrix, mvtnorm
 Version: 0.1.0

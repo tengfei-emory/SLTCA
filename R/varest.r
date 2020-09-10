@@ -25,11 +25,11 @@ VarEst <- function(beta0,beta1,phi,gamma,tau1,p,dat,x,y,Y_dist,balanced=T){
           dmulink <- function(x) 1
         }else if (Y_dist[j] == 'poi'){
           mulink <- function(x) exp(x)
-          varlink <- function(lambda) lambda
+          varlink <- function(x) x
           dmulink <- function(x) exp(x)
         }else if (Y_dist[j] == 'bin'){
           mulink <- function(x) exp(x)/(1+exp(x))
-          varlink <- function(p) p*(1-p)
+          varlink <- function(x) x*(1-x)
           dmulink <- function(x) exp(x)/(1+exp(x))^2 #(exp(x)*(1+exp(x)) - exp(x)*exp(x))/(1+exp(x))^2
         }
         mu[[c]][[j]] <- mulink(t(beta0[j,c] + beta1[j,c]%*%t(dat$time[dat$id == dat$id[dat$num_obs == nmax][1]])))
@@ -130,11 +130,11 @@ VarEst <- function(beta0,beta1,phi,gamma,tau1,p,dat,x,y,Y_dist,balanced=T){
             dmulink <- function(x) 1
           }else if (Y_dist[j] == 'poi'){
             mulink <- function(x) exp(x)
-            varlink <- function(lambda) lambda
+            varlink <- function(x) x
             dmulink <- function(x) exp(x)
           }else if (Y_dist[j] == 'bin'){
             mulink <- function(x) exp(x)/(1+exp(x))
-            varlink <- function(p) p*(1-p)
+            varlink <- function(x) x*(1-x)
             dmulink <- function(x) exp(x)/(1+exp(x))^2 #(exp(x)*(1+exp(x)) - exp(x)*exp(x))/(1+exp(x))^2
           }
 

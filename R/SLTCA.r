@@ -1,4 +1,4 @@
-#' SLTCA: Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood
+#' Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood
 #'
 #' @description Conduct latent trajectory class analysis with longitudinal observations.
 #' @param k Number of random initialization to start the algorithm.

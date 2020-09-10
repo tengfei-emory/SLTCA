@@ -31,10 +31,10 @@ LinProj <- function(beta0,beta1,phi,gamma,dat,y,Y_dist,balanced=F){
           varlink <- function(x) rep(1,length(x))
         }else if (Y_dist[j] == 'poi'){
           mulink <- function(x) exp(x)
-          varlink <- function(lambda) lambda
+          varlink <- function(x) x
         }else if (Y_dist[j] == 'bin'){
           mulink <- function(x) exp(x)/(1+exp(x))
-          varlink <- function(p) p*(1-p)
+          varlink <- function(x) x*(1-x)
         }
 
         # find the mean vector and covariance matrix for jth marker in class c
@@ -92,10 +92,10 @@ LinProj <- function(beta0,beta1,phi,gamma,dat,y,Y_dist,balanced=F){
             varlink <- function(x) rep(1,length(x))
           }else if (Y_dist[j] == 'poi'){
             mulink <- function(x) exp(x)
-            varlink <- function(lambda) lambda
+            varlink <- function(x) x
           }else if (Y_dist[j] == 'bin'){
             mulink <- function(x) exp(x)/(1+exp(x))
-            varlink <- function(p) p*(1-p)
+            varlink <- function(x) x*(1-x)
           }
           mu[[c]][[i]][[j]] <- mulink(t(beta0[j,c] + beta1[j,c]%*%t(dat$time[dat$id==i])))
 
