@@ -24,21 +24,21 @@
 #' @examples
 #'
 #'
-#' # In this illustrative example the sample size is set as n=100,
+#' # In this illustrative example the sample size is set as n=50,
 #' # variance estimation is skipped by setting varest=FALSE, and
 #' # the maximum number of iterations is set as max=1 in order to pass CRAN test.
 #' # Please use n=500, varest=TRUE and max=50 for more reliable results.
 #'
-#' dat <- simulation(n=100)
+#' dat <- simulation(n=50)
 #' res <- SLTCA(k=1,dat,num_class=2,"id","time","num_obs",paste("y.",1:6,sep=''),
 #'              Y_dist=c('poi','poi','bin','bin','normal','normal'),
 #'              "baselinecov",1,stop="tau",tol=0.005,max=1,
-#'              varest=FALSE,balanced=TRUE,MSC='EQIC',verbose=TRUE)
+#'              varest=FALSE,balanced=TRUE,MSC='EQIC',verbose=FALSE)
 #'
 #' @importFrom stats as.formula binomial coef dist fitted gaussian poisson rbinom rmultinom rpois runif weights
 #' @export
 
-SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol=0.005,max=50,varest=T,balanced=T,MSC='EQIC',verbose=T){
+SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol=0.005,max=50,varest=TRUE,balanced=TRUE,MSC='EQIC',verbose=TRUE){
 
   #require(Matrix)
   #require(VGAM)
@@ -51,7 +51,7 @@ SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,
 
   if(MSC == 'AQIC'){
     for (i in 1:k){
-      cat('random initialization',i,'\n')
+      if(verbose) cat('random initialization',i,'\n')
       sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,balanced,verbose)
       if (sol$qic[[1]] < IC){
         best_sol <- sol
@@ -60,7 +60,7 @@ SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,
     }
   }else if (MSC == 'BQIC'){
     for (i in 1:k){
-      cat('random initialization',i,'\n')
+      if(verbose) cat('random initialization',i,'\n')
       sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,verbose)
       if (sol$qic[[2]] < IC){
         best_sol <- sol
@@ -69,7 +69,7 @@ SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,
     }
   }else if (MSC == 'EQIC'){
     for (i in 1:k){
-      cat('random initialization',i,'\n')
+      if (verbose) cat('random initialization',i,'\n')
       sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,verbose)
       if (sol$qic[[3]] < IC){
         best_sol <- sol
