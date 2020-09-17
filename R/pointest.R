@@ -553,7 +553,7 @@ pointest <- function(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop
   ##### compute variance estimation
 
   if (varest == T){
-    cat('Variance estimation started \n')
+    if(verbose) cat('Variance estimation started \n')
     x <- as.matrix(baseline[,covx_lb])
     ASE <- VarEst(obj_beta0,obj_beta1,obj_phi,obj_gamma,tau0,p,dat,x,y,Y_dist,balanced)
     rownames(ASE$alpha) = c('intercept',covx)

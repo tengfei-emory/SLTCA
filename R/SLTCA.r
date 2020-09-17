@@ -61,7 +61,7 @@ SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,
   }else if (MSC == 'BQIC'){
     for (i in 1:k){
       if(verbose) cat('random initialization',i,'\n')
-      sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,verbose)
+      sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,balanced,verbose)
       if (sol$qic[[2]] < IC){
         best_sol <- sol
         IC = sol$qic[[2]]
@@ -70,7 +70,7 @@ SLTCA <- function(k = 20,dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,
   }else if (MSC == 'EQIC'){
     for (i in 1:k){
       if (verbose) cat('random initialization',i,'\n')
-      sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,verbose)
+      sol <- pointest(dat,num_class,id,time,num_obs,features,Y_dist,covx,ipw,stop,tol,max,varest,balanced,verbose)
       if (sol$qic[[3]] < IC){
         best_sol <- sol
         IC = sol$qic[[3]]
