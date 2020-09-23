@@ -1,9 +1,15 @@
 # SLTCA
+
+[![CRAN Status Badge](http://www.r-pkg.org/badges/version/SLTCA)](http://cran.r-project.org/web/packages/SLTCA)
+[![Downloads badge](https://cranlogs.r-pkg.org/badges/SLTCA)](https://cranlogs.r-pkg.org/badges/SLTCA)
+[![Total downloads](https://cranlogs.r-pkg.org/badges/grand-total/SLTCA)](https://cranlogs.r-pkg.org/badges/grand-total/SLTCA)
+[![](https://img.shields.io/badge/doi-10.1111/biom.13366-blue.svg)](https://doi.org/10.1111/biom.13366)
+
 SLTCA: Scalable and Robust Latent Trajectory Class Analysis Using Artificial Likelihood
 
 # News
 
-We are in process to publish the package to CRAN, including a bunch of improvement in reliability and estimation. This repository will mainly serve as a platform for bug reporting (at [Issues](https://github.com/tengfei-emory/SLTCA/issues)) while we will post the lastest version on CRAN.
+The package is on [CRAN](https://cran.r-project.org/package=SLTCA) now. This repository will mainly serve as a platform for bug reporting (at [Issues](https://github.com/tengfei-emory/SLTCA/issues)) while we will post the lastest version on CRAN.
 
 To access the latest version on GitHub, please go to branch [CRAN](https://github.com/tengfei-emory/SLTCA/tree/CRAN). Thanks for considering using our software!
 
