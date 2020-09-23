@@ -13,8 +13,7 @@ The package is on [CRAN](https://cran.r-project.org/package=SLTCA) now. This rep
 
 # Installation Guide
 ```{r}
-library(devtools)
-install_github('tengfei-emory/SLTCA')
+install.packages("SLTCA")
 library(SLTCA)
 ```
 Currently `SLTCA` supports R version >= 3.3.0.
