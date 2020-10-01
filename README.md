@@ -16,7 +16,7 @@ The package is on [CRAN](https://cran.r-project.org/package=SLTCA) now. This rep
 install.packages("SLTCA")
 library(SLTCA)
 ```
-Currently `SLTCA` supports R version >= 3.3.0.
+Currently `SLTCA` supports R version >= 3.5.0.
 
 # Example: analyze a simulated dataset
 
